@@ -1,34 +1,19 @@
 {
-    "rules": {
-        "no-param-reassign": 0,
-        "curly": [
-            1,
-            "multi-line"
-        ],
-        "indent": [
-            2,
-            2
-        ],
-        "quotes": [
-            2,
-            "single"
-        ],
-        "linebreak-style": [
-            2,
-            "unix"
-        ],
-        "semi": [
-            2,
-            "always"
-        ],
-        "no-console": [1]
-    },
-    "env": {
-        "node": true,
-        "jest": true
-    },
-    "parserOptions": {
-        "ecmaVersion": 6
-    },
-    "extends": ["eslint:recommended", "prettier"]
+  "rules": {
+    "no-param-reassign": 0,
+    "curly": [1, "multi-line"],
+    "indent": [2, 2],
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "always"],
+    "no-console": [1]
+  },
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "extends": ["eslint:recommended", "prettier"]
 }

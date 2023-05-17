@@ -5,8 +5,6 @@
 
 var SEPA = require('../lib/');
 
-
-SEPA.enableValidations(true);
 var doc = new SEPA.Document();
 doc.grpHdr.id = 'XMPL.20140201.TR0';
 doc.grpHdr.created = new Date();

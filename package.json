@@ -1,6 +1,6 @@
 {
   "name": "sepa",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Create SEPA XML for business transactions",
   "repository": {
     "url": "https://github.com/kewisch/sepa.js"

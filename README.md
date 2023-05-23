@@ -1,5 +1,4 @@
-Welcome to sepa.js
-==================
+# Welcome to sepa.js
 
 This library can be used to generate the XML structure used
 for [SEPA](http://en.wikipedia.org/wiki/Single_Euro_Payments_Area) payment
@@ -18,107 +17,107 @@ If you have extended sepa.js for a different purpose, please contribute the code
 either via email or ideally as a [pull request](https://github.com/kewisch/sepa.js/pulls).
 If you are missing something, please [create an issue](https://github.com/kewisch/sepa.js/issues).
 
-* Each SEPA document contains exactly one group header, accessible via the `grpHdr` property.
-* You can add multiple paymentInfo blocks to a document, i.e one per sequenceType (FRST/RCUR)
-* A payment info block can contain multiple transactions.
+- Each SEPA document contains exactly one group header, accessible via the `grpHdr` property.
+- You can add multiple paymentInfo blocks to a document, i.e one per sequenceType (FRST/RCUR)
+- A payment info block can contain multiple transactions.
 
 You can also check the full [XML file structure for Credit Transfer](https://businessbanking.bankofireland.com/fs/doc/wysiwyg/sepa-credit-transfer-pain-001-001-03-xml-file-structure-july-2013.pdf) (PAIN.001.001.03) if you want more details.
 
-Validating an IBAN or Creditor ID
----------------------------------
+## Validating an IBAN or Creditor ID
 
 You can use sepa.js to validate IBAN and Creditor ID numbers or calculate their checksum. Here is an example:
 
 ```javascript
-var SEPA = require("sepa");
+var SEPA = require('sepa')
 
 // Validating this IBAN returns true.
-SEPA.validateIBAN("DE40987654329876543210");
+SEPA.validateIBAN('DE40987654329876543210')
 
 // Passing this IBAN with "00" as the checksum returns the
 // IBAN with the correct checksum, "DE87123456781234567890".
-SEPA.checksumIBAN("DE00123456781234567890");
+SEPA.checksumIBAN('DE00123456781234567890')
 
 // Validating this Creditor ID returns true.
-SEPA.validateCreditorID("DE98ZZZ09999999999");
+SEPA.validateCreditorID('DE98ZZZ09999999999')
 
 // Passing this Creditor ID with "00" as the checksum returns the
 // Creditor ID with the correct checksum, "DE98ZZZ09999999999".
-SEPA.checksumCreditorID("DE00ZZZ09999999999");
+SEPA.checksumCreditorID('DE00ZZZ09999999999')
 ```
 
-Creating an XML DirectDebit Document
----------------------------------
+## Creating an XML DirectDebit Document
+
 The main use case for sepa.js is creating an XML Document based on the
 [EBICS Specification](http://www.ebics.org/index.php?id=30).
 Here is a simple node.js example. If you want to use the browser instead, just
 omit the first line and include via script-tag or module loader instead.
+
 ```javascript
-var SEPA = require("sepa");
+var SEPA = require('sepa')
 
-var doc = new SEPA.Document('pain.008.001.02');
-doc.grpHdr.id = "XMPL.20140201.TR0";
-doc.grpHdr.created = new Date();
-doc.grpHdr.initiatorName = "Example LLC";
+var doc = new SEPA.Document('pain.008.001.02')
+doc.grpHdr.id = 'XMPL.20140201.TR0'
+doc.grpHdr.created = new Date()
+doc.grpHdr.initiatorName = 'Example LLC'
 
-var info = doc.createPaymentInfo();
-info.collectionDate = new Date();
-info.creditorIBAN = "DE87123456781234567890";
-info.creditorBIC = "XMPLDEM0XXX";
-info.creditorName = "Example LLC";
-info.creditorId = "DE98ZZZ09999999999";
-info.batchBooking = true; //optional
-doc.addPaymentInfo(info);
+var info = doc.createPaymentInfo()
+info.collectionDate = new Date()
+info.creditorIBAN = 'DE87123456781234567890'
+info.creditorBIC = 'XMPLDEM0XXX'
+info.creditorName = 'Example LLC'
+info.creditorId = 'DE98ZZZ09999999999'
+info.batchBooking = true //optional
+doc.addPaymentInfo(info)
 
-var tx = info.createTransaction();
-tx.debtorName = "Example Customer";
-tx.debtorIBAN = "DE40987654329876543210";
-tx.debtorBIC = "CUSTDEM0XXX";
-tx.mandateId = "XMPL.CUST487.2014";
-tx.mandateSignatureDate = new Date("2014-02-01");
-tx.amount = 50.23;
-tx.currency = 'EUR'; //optional
-tx.remittanceInfo = "INVOICE 54";
-tx.end2endId = "XMPL.CUST487.INVOICE.54";
-info.addTransaction(tx);
+var tx = info.createTransaction()
+tx.debtorName = 'Example Customer'
+tx.debtorIBAN = 'DE40987654329876543210'
+tx.debtorBIC = 'CUSTDEM0XXX'
+tx.mandateId = 'XMPL.CUST487.2014'
+tx.mandateSignatureDate = new Date('2014-02-01')
+tx.amount = 50.23
+tx.currency = 'EUR' //optional
+tx.remittanceInfo = 'INVOICE 54'
+tx.end2endId = 'XMPL.CUST487.INVOICE.54'
+info.addTransaction(tx)
 
-console.log(doc.toString());
+console.log(doc.toString())
 ```
 
-Creating an XML Transfer Document
----------------------------------
+## Creating an XML Transfer Document
 
 ```javascript
-var SEPA = require("sepa");
+var SEPA = require('sepa')
 
-var doc = new SEPA.Document('pain.001.001.03');
-doc.grpHdr.id = "XMPL.20140201.TR0";
-doc.grpHdr.created = new Date();
-doc.grpHdr.initiatorName = "Example LLC";
+var doc = new SEPA.Document('pain.001.001.03')
+doc.grpHdr.id = 'XMPL.20140201.TR0'
+doc.grpHdr.created = new Date()
+doc.grpHdr.initiatorName = 'Example LLC'
 
-var info = doc.createPaymentInfo();
-info.requestedExecutionDate = new Date();
-info.debtorIBAN = "DE87123456781234567890";
-info.debtorBIC = "XMPLDEM0XXX";
-info.debtorName = "Example LLC";
-info.debtorId = "DE98ZZZ09999999999";
-doc.addPaymentInfo(info);
+var info = doc.createPaymentInfo()
+info.requestedExecutionDate = new Date()
+info.debtorIBAN = 'DE87123456781234567890'
+info.debtorBIC = 'XMPLDEM0XXX'
+info.debtorName = 'Example LLC'
+info.debtorId = 'DE98ZZZ09999999999'
+doc.addPaymentInfo(info)
 
-var tx = info.createTransaction();
-tx.creditorName = "Example Customer";
-tx.creditorIBAN = "DE40987654329876543210";
-tx.creditorBIC = "CUSTDEM0XXX";
-tx.mandateId = "XMPL.CUST487.2014";
-tx.mandateSignatureDate = new Date("2014-02-01");
-tx.amount = 50.23;
-tx.remittanceInfo = "INVOICE 54";
-tx.end2endId = "XMPL.CUST487.INVOICE.54";
-info.addTransaction(tx);
+var tx = info.createTransaction()
+tx.creditorName = 'Example Customer'
+tx.creditorIBAN = 'DE40987654329876543210'
+tx.creditorBIC = 'CUSTDEM0XXX'
+tx.mandateId = 'XMPL.CUST487.2014'
+tx.mandateSignatureDate = new Date('2014-02-01')
+tx.amount = 50.23
+tx.remittanceInfo = 'INVOICE 54'
+tx.end2endId = 'XMPL.CUST487.INVOICE.54'
+info.addTransaction(tx)
 
-console.log(doc.toString());
+console.log(doc.toString())
 ```
 
 ### XML Result
+
 ```xml
 <?xml version="1.0"?>
 <Document schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.008.003.02 pain.008.003.02.xsd">
@@ -208,7 +207,6 @@ console.log(doc.toString());
 </Document>
 ```
 
-Related Tools
--------------
+## Related Tools
 
 [Online SEPA XML Validation](http://www.mobilefish.com/services/sepa_xml_validation/sepa_xml_validation.php) (Credit Transfer and Direct Debit Support)

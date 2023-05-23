@@ -1,6 +1,6 @@
 {
   "name": "sepa",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "description": "Create SEPA XML for business transactions",
   "repository": {
     "url": "https://github.com/kewisch/sepa.js"
@@ -22,9 +22,9 @@
     "xmldom": "0.6.0"
   },
   "devDependencies": {
-    "eslint": "5.16.0",
-    "eslint-config-prettier": "4.3.0",
-    "jest": "24.8.0",
+    "eslint": "8.41.0",
+    "eslint-config-prettier": "8.8.0",
+    "jest": "29.5.0",
     "pre-commit": "1.2.2"
   },
   "optionalDependencies": {},

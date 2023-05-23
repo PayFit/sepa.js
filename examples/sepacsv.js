@@ -4,14 +4,26 @@
  * Portions Copyright (C) Philipp Kewisch, 2014-2015 */
 
 // Helper functions needed in settings
-function pad0(str, len) { var fmt = '', fmtsize = len; while(fmtsize--) fmt += '0'; return (fmt + str).substr(-len); }
+function pad0(str, len) {
+  var fmt = '',
+    fmtsize = len;
+  while (fmtsize--) fmt += '0';
+  return (fmt + str).substr(-len);
+}
 
 // Make your settings here
 var created = new Date();
-var transIdFmt = 'XMPL.' + created.getFullYear() + pad0(created.getMonth() + 1, 2) + pad0(created.getDate(), 2) + '.TR0';
+var transIdFmt =
+  'XMPL.' +
+  created.getFullYear() +
+  pad0(created.getMonth() + 1, 2) +
+  pad0(created.getDate(), 2) +
+  '.TR0';
 var mandateFmt = 'XMPL.CUST%id%.%sigdate.year%';
-var end2endFmt= 'XMPL.CUST%id%.FEE.' + created.getFullYear() + pad0(created.getMonth() + 1, 2);
-var remittanceInfo = 'Member Fee ' + created.getFullYear() + '/' + pad0(created.getMonth() + 1, 2);
+var end2endFmt =
+  'XMPL.CUST%id%.FEE.' + created.getFullYear() + pad0(created.getMonth() + 1, 2);
+var remittanceInfo =
+  'Member Fee ' + created.getFullYear() + '/' + pad0(created.getMonth() + 1, 2);
 var creditorIBAN = 'DE87123456781234567890';
 var creditorBIC = 'XMPLDEM0XXX';
 var creditorId = 'DE98ZZZ09999999999';
@@ -19,8 +31,12 @@ var creditorName = 'Example LLC';
 var sequenceType = 'FRST';
 var transactionAmount = 5;
 
-function CSV_READ_ID(data) { return data[0]; }
-function CSV_READ_NAME(data) { return data[15]; }
+function CSV_READ_ID(data) {
+  return data[0];
+}
+function CSV_READ_NAME(data) {
+  return data[15];
+}
 function CSV_READ_IBAN(data) {
   if (!data[16] && data[12] && data[13]) {
     // If there is no IBAN, put it together from the old account data. Adapt
@@ -30,8 +46,12 @@ function CSV_READ_IBAN(data) {
     return data[16];
   }
 }
-function CSV_READ_SIGDATE(data) { return new Date(data[4]); }
-function CSV_ACCEPT_ROW(data) { return !data[5]; }
+function CSV_READ_SIGDATE(data) {
+  return new Date(data[4]);
+}
+function CSV_ACCEPT_ROW(data) {
+  return !data[5];
+}
 // End Settings
 
 var SEPA = require('sepa');
@@ -44,30 +64,34 @@ function Customer(id, name, iban, sigdate) {
   this.iban = iban;
   this.sigdate = sigdate;
 
-  this.formatString = function(fmt) {
-    return fmt.replace('%id%', this.id)
+  this.formatString = function (fmt) {
+    return fmt
+      .replace('%id%', this.id)
       .replace('%name%', this.name)
       .replace('%iban%', this.iban)
       .replace('%sigdate.year%', this.sigdate.getFullYear())
       .replace('%sigdate.month%', this.sigdate.getMonth() + 1)
-      .replace('%sigdate.day%',  this.sigdate.getDate());
+      .replace('%sigdate.day%', this.sigdate.getDate());
   };
 }
 
 function readCSV(fname) {
   var customers = [];
-  csv.fromPath(fname).on('record', function(data){
-    var id = CSV_READ_ID(data);
-    var name = CSV_READ_NAME(data);
-    var iban = CSV_READ_IBAN(data);
-    var sigdate = CSV_READ_SIGDATE(data);
+  csv
+    .fromPath(fname)
+    .on('record', function (data) {
+      var id = CSV_READ_ID(data);
+      var name = CSV_READ_NAME(data);
+      var iban = CSV_READ_IBAN(data);
+      var sigdate = CSV_READ_SIGDATE(data);
 
-    if (CSV_ACCEPT_ROW(data)) {
-      customers.push(new Customer(id, name, iban, sigdate));
-    }
-  }).on('end', function(){
-    generateSEPA(customers);
-  });
+      if (CSV_ACCEPT_ROW(data)) {
+        customers.push(new Customer(id, name, iban, sigdate));
+      }
+    })
+    .on('end', function () {
+      generateSEPA(customers);
+    });
 }
 
 function generateSEPA(customers) {

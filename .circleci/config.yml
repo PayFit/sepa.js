@@ -1,0 +1,56 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.2.1
+
+references:
+  attach_workspace: &attach_workspace
+    at: '.'
+
+jobs:
+  install-dependencies:
+    docker:
+      - image: cimg/node:20.5.0
+    steps:
+      - checkout
+      - run: yarn --frozen-lockfile
+      - persist_to_workspace:
+          root: '.'
+          paths:
+            - node_modules
+  test:
+    docker:
+      - image: cimg/node:20.5.0
+    steps:
+      - checkout
+      - attach_workspace: *attach_workspace
+      - run: yarn test
+
+  lint:
+    docker:
+      - image: cimg/node:20.5.0
+    steps:
+      - checkout
+      - attach_workspace: *attach_workspace
+      - run: yarn lint
+
+workflows:
+  build_test_deploy:
+    jobs:
+      - install-dependencies:
+          context:
+            - GLOBAL_ORG
+      - test:
+          context:
+            - GLOBAL_ORG
+            - PAYFIT_ECR_CREDENTIALS
+            - PAYFIT_ECR_REGISTRY
+          requires:
+            - install-dependencies
+      - lint:
+          context:
+            - GLOBAL_ORG
+            - PAYFIT_ECR_CREDENTIALS
+            - PAYFIT_ECR_REGISTRY
+          requires:
+            - install-dependencies

@@ -13,7 +13,7 @@ jobs:
       - image: cimg/node:20.5.0
     steps:
       - checkout
-      - run: yarn --frozen-lockfile
+      - run: yarn --immutable
       - persist_to_workspace:
           root: '.'
           paths:

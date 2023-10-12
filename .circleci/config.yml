@@ -43,14 +43,12 @@ workflows:
       - test:
           context:
             - GLOBAL_ORG
-            - PAYFIT_ECR_CREDENTIALS
-            - PAYFIT_ECR_REGISTRY
+            - PAYFIT_PRIVATE_PUSH_ECR_REGISTRY
           requires:
             - install-dependencies
       - lint:
           context:
             - GLOBAL_ORG
-            - PAYFIT_ECR_CREDENTIALS
-            - PAYFIT_ECR_REGISTRY
+            - PAYFIT_PRIVATE_PUSH_ECR_REGISTRY
           requires:
             - install-dependencies
